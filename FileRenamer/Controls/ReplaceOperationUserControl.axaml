@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			xmlns:conv="clr-namespace:FileRenamer.Converters"
+			xmlns:vmd="clr-namespace:FileRenamer.Data"
+			mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			x:Class="FileRenamer.Controls.ReplaceOperationUserControl">
+	<UserControl.Resources>
+		<conv:EnumToBoolConverter x:Key="enumToBoolConverterKey" />
+	</UserControl.Resources>
+	<Grid ColumnDefinitions="*" RowDefinitions="*,40" Margin="5" VerticalAlignment="Stretch">
+		<StackPanel Margin="20" Grid.Column="0" Grid.Row="0" Orientation="Vertical" Height="240" VerticalAlignment="Top">
+			<TextBlock Margin="5" FontSize="20" Text="Replace"/>
+			<TextBox Margin="5" FontSize="20" AcceptsReturn="False" TextWrapping="NoWrap" TextAlignment="Left" Watermark="Text to be replaced" Text="{Binding ToBeReplaced}"/>
+			<TextBlock Margin="5" FontSize="20" Text="with"/>
+			<TextBox Margin="5" FontSize="20" AcceptsReturn="False" TextWrapping="NoWrap" TextAlignment="Left" Watermark="New text" Text="{Binding ToReplace}"/>
+			<CheckBox FontSize="20" IsChecked="{Binding IgnoreCase}">Ignore Case</CheckBox>
+			<StackPanel Orientation="Horizontal">
+				<RadioButton IsChecked="{Binding Path=Occurrence, Converter={StaticResource enumToBoolConverterKey}, ConverterParameter={x:Static vmd:TextOccurrence.First}, Mode=TwoWay}" Margin="30 5" FontSize="20" GroupName="OccurrenceGroup" Content="First Occurrence"/>
+				<RadioButton IsChecked="{Binding Path=Occurrence, Converter={StaticResource enumToBoolConverterKey}, ConverterParameter={x:Static vmd:TextOccurrence.Last}, Mode=TwoWay}" Margin="30 5" FontSize="20" GroupName="OccurrenceGroup" Content="Last Occurrence"/>
+				<RadioButton IsChecked="{Binding Path=Occurrence, Converter={StaticResource enumToBoolConverterKey}, ConverterParameter={x:Static vmd:TextOccurrence.All}, Mode=TwoWay}" Margin="30 5" FontSize="20" GroupName="OccurrenceGroup" Content="All Occurrences"/>
+			</StackPanel>
+		</StackPanel>
+		<TextBlock Margin="5" Grid.Column="0" Grid.Row="1" FontSize="20" Text="{Binding Path=NewExampleName, Mode=OneWay, StringFormat='Example: {0}'}" VerticalAlignment="Bottom"/>
+	</Grid>
+</UserControl>

@@ -1,0 +1,28 @@
+<Window xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:cc="using:FileRenamer.Controls"
+		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		x:Class="FileRenamer.Views.OperationWindow"
+		Icon="/Assets/avalonia-logo.ico"
+		Title="Operation to Apply to File Name"
+		DataContext="{Binding RelativeSource={RelativeSource Self}}">
+	<Grid Name="OpWindowGrid" ColumnDefinitions="*" RowDefinitions="*,Auto,Auto" Margin="5">
+		<TabControl Name="OpTabControl" Grid.Column="0" Grid.Row="0" Margin="5" FontSize="20">
+			<TabItem Header="Add">
+				<cc:AddOperationUserControl Name="AddControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="322"/>
+			</TabItem>
+			<TabItem Header="Remove">
+				<cc:RemoveOperationUserControl Name="RemoveControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="322"/>
+			</TabItem>
+			<TabItem Header="Replace">
+				<cc:ReplaceOperationUserControl Name="ReplaceControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="322"/>
+			</TabItem>
+		</TabControl>
+		<StackPanel Margin="5" Grid.Column="0" Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+			<Button Name="OkButton" Margin="5" FontSize="20" Content="OK" IsDefault="True" />
+			<Button Name="CancelButton" Margin="5" FontSize="20" Content="Cancel" IsCancel="True"/>
+		</StackPanel>
+	</Grid>
+</Window>

@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="clr-namespace:FileRenamer.ViewModels"
+			 xmlns:controls="clr-namespace:FileRenamer.Controls"
+			 xmlns:conv="clr-namespace:FileRenamer.Converters"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:Class="FileRenamer.Views.MainView"
+			 x:DataType="vm:MainViewModel">
+  <Design.DataContext>
+	<!-- This only sets the DataContext for the previewer in an IDE,
+		 to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+	<vm:MainViewModel />
+	</Design.DataContext>
+	<Grid ColumnDefinitions="50,*,70,80" RowDefinitions="40, *, 40" Margin="5">
+		<TextBlock Grid.Column="0" Grid.Row="0" Margin="5" Text="Folder:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+		<TextBox Grid.Column="1" Grid.Row="0" Margin="5" Text="{Binding Folder, Mode=OneWay}" Watermark="Folder containing the files to rename" AcceptsReturn="False" TextWrapping="NoWrap"/>
+		<Button Grid.Column="2" Grid.Row="0" Margin="5" Name="OpenFolderButton" Click="OpenFolderButton_Clicked" Content="Open"/>
+		<Button Grid.Column="3" Grid.Row="0" Margin="5" Name="RefreshFolderButton" Click="RefreshFolderButton_Clicked" Content="Refresh"/>
+		<SplitView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="4" Name="OpSplitView" IsPaneOpen="False" DisplayMode="CompactOverlay" OpenPaneLength="300" PanePlacement="Right">
+			<SplitView.Pane>
+				<Grid Name="OpPanelGrid" ColumnDefinitions="40,*" RowDefinitions="40,*,40" Margin="5">
+					<Button Grid.Column="0" Grid.Row="0" Margin="5" Name="OpPanelControlButton" Click="OpPanelControlButton_Clicked" Content="&lt;" IsEnabled="{Binding Files.Count}" />
+					<TextBlock Grid.Column="1" Grid.Row="0" Margin="5" Text="Ordered Rename Operations" HorizontalAlignment="Left" VerticalAlignment="Center" IsVisible="{Binding #OpSplitView.IsPaneOpen}"/>
+					<ScrollViewer Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" IsVisible="{Binding #OpSplitView.IsPaneOpen}">
+						<ListBox Name="OpList" ItemsSource="{Binding Renames}" SelectionMode="Single">
+							<ListBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding Name}" />
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
+					</ScrollViewer>
+					<StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" FlowDirection="LeftToRight" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" IsVisible="{Binding #OpSplitView.IsPaneOpen}">
+						<Button Margin="5" Name="OpAddButton" Content="+" Click="OpAddButton_Click"/>
+						<Button Margin="5" Name="OpRemoveButton" Content="-" Click="OpRemoveButton_Click" IsEnabled="{Binding Path=#OpList.SelectedItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+						<Button Margin="5" Name="OpUpButton" Content="˄" Click="OpUpButton_Click" IsEnabled="{Binding Path=#OpList.SelectedItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+						<Button Margin="5" Name="OpDownButton" Content="˅" Click="OpDownButton_Click" IsEnabled="{Binding Path=#OpList.SelectedItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+						<Button Margin="5" Name="OpEditButton" Content="Edit" Click="OpEditButton_Click" IsEnabled="{Binding Path=#OpList.SelectedItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+						<Button Margin="5" Name="OpClearButton" Content="Clear" Click="OpClearButton_Click" IsEnabled="{Binding Renames.Count}"/>
+					</StackPanel>
+				</Grid>
+			</SplitView.Pane>
+			<ScrollViewer>
+				<DataGrid Name="FileGrid" Margin="5" ItemsSource="{Binding Files}" CanUserReorderColumns="True" CanUserResizeColumns="True" CanUserSortColumns="True" GridLinesVisibility="All">
+					<DataGrid.Columns>
+						<DataGridCheckBoxColumn Header="Selected" Binding="{Binding Selected, Mode=TwoWay}" IsReadOnly="False" Width="94" IsThreeState="False" IsVisible="True"/>
+						<DataGridTextColumn Header="Current" Binding="{Binding CurrentFileName, Mode=OneWay}" IsReadOnly="True" Width="*"/>
+						<DataGridTextColumn Header="New" Binding="{Binding NewFileName, Mode=TwoWay}" IsReadOnly="True" Width="*"/>
+					</DataGrid.Columns>
+				</DataGrid>
+			</ScrollViewer>
+		</SplitView>
+		<Button Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="4" Margin="5" Name="RenameButton" Command="{Binding RenameFiles}" Content="Rename" IsEnabled="{Binding Path=CanRename, Mode=OneWay}"/>
+	</Grid>
+</UserControl>

@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			xmlns:conv="clr-namespace:FileRenamer.Converters"
+			xmlns:vm="clr-namespace:FileRenamer.Operations"
+			xmlns:vmd="clr-namespace:FileRenamer.Data"
+			mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			x:Class="FileRenamer.Controls.RemoveOperationUserControl">
+	<UserControl.Resources>
+		<conv:EnumToBoolConverter x:Key="enumToBoolConverterKey" />
+	</UserControl.Resources>
+	<Grid ColumnDefinitions="*" RowDefinitions="*,40" Margin="5" VerticalAlignment="Stretch">
+		<StackPanel Margin="20" Grid.Column="0" Grid.Row="0" Height="240" Orientation="Vertical" VerticalAlignment="Top">
+			<TextBlock Margin="5" Text="What to Remove:" FontSize="20"/>
+			<StackPanel Orientation="Horizontal">
+				<RadioButton Name="TextRadioButton" IsChecked="{Binding Path=WhichToRemove, Converter={StaticResource enumToBoolConverterKey}, ConverterParameter={x:Static vmd:RemoveType.String}, Mode=TwoWay}" Margin="5" FontSize="20" GroupName="RemoveGroup" Content="Text"/>
+				<TextBox Margin="5" FontSize="20" AcceptsReturn="False" TextWrapping="NoWrap" TextAlignment="Left" Watermark="Text to be removed" Text="{Binding TextToRemove}" Width="620"/>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal">
+				<RadioButton IsEnabled="{Binding #TextRadioButton.IsChecked}" IsChecked="{Binding Path=Occurrence, Converter={StaticResource enumToBoolConverterKey}, ConverterParameter={x:Static vmd:TextOccurrence.First}, Mode=TwoWay}" Margin="30 5" FontSize="20" GroupName="RemoveTextGroup" Content="First Occurrence"/>
+				<RadioButton IsEnabled="{Binding #TextRadioButton.IsChecked}" IsChecked="{Binding Path=Occurrence, Converter={StaticResource enumToBoolConverterKey}, ConverterParameter={x:Static vmd:TextOccurrence.Last}, Mode=TwoWay}" Margin="30 5" FontSize="20" GroupName="RemoveTextGroup" Content="Last Occurrence"/>
+				<RadioButton IsEnabled="{Binding #TextRadioButton.IsChecked}" IsChecked="{Binding Path=Occurrence, Converter={StaticResource enumToBoolConverterKey}, ConverterParameter={x:Static vmd:TextOccurrence.All}, Mode=TwoWay}" Margin="30 5" FontSize="20" GroupName="RemoveTextGroup" Content="All Occurrences"/>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal">
+				<RadioButton Name="NumberRadioButton" IsChecked="{Binding Path=WhichToRemove, Converter={StaticResource enumToBoolConverterKey}, ConverterParameter={x:Static vmd:RemoveType.NumberOfCharacters}, Mode=TwoWay}" Margin="5" FontSize="20" GroupName="RemoveGroup" Content="Number of Characters"/>
+				<NumericUpDown IsEnabled="{Binding #NumberRadioButton.IsChecked}" Margin="5" FontSize="20" Value="{Binding NumToRemove}" Minimum="1" Increment="1" Width="120"/>
+				<TextBlock IsEnabled="{Binding #NumberRadioButton.IsChecked}" Margin="5" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Right" Text="at"/>
+				<ComboBox IsEnabled="{Binding #NumberRadioButton.IsChecked}" Name="LocationComboBox" Margin="5" FontSize="20" VerticalAlignment="Center" SelectedIndex="{Binding LocationSelectionValue}" MaxDropDownHeight="100" Width="100"/>
+				<NumericUpDown Name="CharacterIndexNumericUpDown" IsEnabled="{Binding Path=CharacterIndexEnabled, Mode=OneWay}" Margin="5" FontSize="20" Value="{Binding CharacterIndex}" Minimum="0" Increment="1" Width="120"/>
+			</StackPanel>
+		</StackPanel>
+		<TextBlock Margin="5" Grid.Column="0" Grid.Row="1" FontSize="20" Text="{Binding Path=NewExampleName, Mode=OneWay, StringFormat='Example: {0}'}" VerticalAlignment="Bottom"/>
+	</Grid>
+</UserControl>
